@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = 'u4_7=yo&6dk*f8wiu&oye*3bmder1!!9l1ioq$mo^gho&jz6(@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'on') == 'on'
 
 TEMPLATE_DEBUG = True
 
@@ -47,9 +47,11 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'prototype.urls'
+TEMPLATE_DIRS = os.path.join(BASE_DIR, 'prototypes', 'templates')
+PROTOTYPE_DIR = os.path.join(BASE_DIR, 'prototypes', 'templates', 'prototypes')
+ROOT_URLCONF = 'prototypes.urls'
 
-WSGI_APPLICATION = 'prototype.wsgi.application'
+WSGI_APPLICATION = 'prototypes.wsgi.application'
 
 
 # Database

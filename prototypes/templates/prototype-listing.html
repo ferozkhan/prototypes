@@ -1,0 +1,15 @@
+{% load url from future %}
+    <!DOCTYPE html>
+<html lang="en" class="no-js"> <head>
+<meta charset="utf-8">
+<title>Prototypes list</title> </head>
+<body>
+<h1>Rapid Prototypes</h1>
+<h2>This is a list of all of the available prototypes.</h2>
+<ul>
+{% for prototype in prototypes %}
+<li><a href="{% url 'prototype' prototype %}">{{ prototype }}</a></li>
+{% endfor %}
+            </ul>
+    </body>
+</html>
