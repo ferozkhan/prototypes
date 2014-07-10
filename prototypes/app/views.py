@@ -14,4 +14,5 @@ def prototype_listing(request):
 
 def prototype_details(request, slug):
     prototype = 'prototypes/{0}'.format(slug)
-    return render(request, prototype)
+    return HttpResponse(prototype)
+    return render(request, prototype, dirs=(settings.PROTOTYPE_DIR))
