@@ -17,12 +17,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'u4_7=yo&6dk*f8wiu&oye*3bmder1!!9l1ioq$mo^gho&jz6(@'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'on') == 'on'
-
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = os.environ.get('TEMPLATE_DEBUG', 'on') == 'on'
 
 ALLOWED_HOSTS = []
 
@@ -30,22 +29,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
     'django.contrib.staticfiles',
 )
 
-MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
 
 TEMPLATE_DIRS = os.path.join(BASE_DIR, 'prototypes', 'templates')
 PROTOTYPE_DIR = os.path.join(BASE_DIR, 'prototypes', 'templates', 'prototypes')
