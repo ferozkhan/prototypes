@@ -16,7 +16,10 @@
     <h3>Available prototypes.</h3>
     <ul>
     {% for prototype in prototypes %}
-    <li><a href="{% url 'prototype_details' prototype %}">{{ prototype }}</a></li>
+    <li>
+        <a href="{% url 'prototype_details' prototype %}">{{ prototype }}</a>
+        <a style="color:red;float:right" href="{% url "remove_prototype" %}?prototype={{prototype}}">*</a>
+    </li>
     {% endfor %}
                 </ul>
     </div>

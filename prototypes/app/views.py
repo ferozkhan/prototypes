@@ -19,6 +19,13 @@ default_prototype = """
 """
 
 
+def remove_prototype(request):
+    if request.REQUEST.get('prototype'):
+        if os.path.exists(os.path.join(settings.PROTOTYPE_DIR, request.REQUEST.get('prototype'))):
+            os.remove(os.path.join(settings.PROTOTYPE_DIR, request.REQUEST.get('prototype')))
+    return HttpResponseRedirect('/prototypes/')
+
+
 def create_prototype(data):
     with open(os.path.join(settings.PROTOTYPE_DIR, data['name']), 'w+') as p:
         p.write(data['prototype'])
@@ -27,7 +34,9 @@ def create_prototype(data):
 
 class PrototypeForm(forms.Form):
     name = forms.CharField(label='name', max_length=15, min_length=3, required=True)
-    prototype = forms.CharField(label='prototype', widget=forms.Textarea(attrs={'cols': 100, 'rows': 50}), required=True)
+    prototype = forms.CharField(label='prototype', widget=forms.Textarea(attrs={
+        'cols': 100, 'rows': 50
+    }), required=True)
 
     def save(self, data):
         return create_prototype(data)
