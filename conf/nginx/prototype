@@ -4,7 +4,7 @@ server {
     charset utf-8;
 
     location /prototypes/ {
-        uwsgi_pass  localhost:8899;
+        uwsgi_pass  localhost:8887;
         include uwsgi_params;
     }
 }
