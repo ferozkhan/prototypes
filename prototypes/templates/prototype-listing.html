@@ -18,7 +18,7 @@
     {% for prototype in prototypes %}
     <li>
         <a href="{% url 'prototype_details' prototype %}">{{ prototype }}</a>
-        <a style="color:red;float:right" href="{% url "remove_prototype" %}?prototype={{prototype}}">*</a>
+        <a style="color:red;float:right" href="{% url "remove_prototype" %}?prototype={{prototype}}" title="remove">x</a>
     </li>
     {% endfor %}
                 </ul>

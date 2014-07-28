@@ -6,30 +6,19 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 
 
-default_prototype = """
+MAX_PROTOTYPE_LIMIT = 5242880
+DEFAULT_PROTOTYPE = """
 <!DOCTYPE html>
 <html>
 <head>
-    <title>PROTYPE TITLE</title>
+    <title>PROTOTYPE TITLE</title>
 </head>
 <body>
-    PROTYPE BODY
+    PROTOTYPE BODY
 </body>
 </html>
 """
 
-
-def remove_prototype(request):
-    if request.REQUEST.get('prototype'):
-        if os.path.exists(os.path.join(settings.PROTOTYPE_DIR, request.REQUEST.get('prototype'))):
-            os.remove(os.path.join(settings.PROTOTYPE_DIR, request.REQUEST.get('prototype')))
-    return HttpResponseRedirect('/prototypes/')
-
-
-def create_prototype(data):
-    with open(os.path.join(settings.PROTOTYPE_DIR, data['name']), 'w+') as p:
-        p.write(data['prototype'])
-    return HttpResponseRedirect('/prototypes/')
 
 
 class PrototypeForm(forms.Form):
@@ -39,24 +28,41 @@ class PrototypeForm(forms.Form):
     }), required=True)
 
     def save(self, data):
-        return create_prototype(data)
+        if len(data['prototype']) > MAX_PROTOTYPE_LIMIT:
+            raise forms.ValidationError('prototype size must be less than 5MB')
+        create_prototype(data)
+
+
+
+def remove_prototype(request):
+    if request.REQUEST.get('prototype'):
+        prototype_path = os.path.join(settings.PROTOTYPE_DIR, request.REQUEST.get('prototype'))
+        if os.path.exists(prototype_path):
+            os.remove(prototype_path)
+    return HttpResponseRedirect('/prototypes/')
+
+
+def create_prototype(data):
+    with open(os.path.join(settings.PROTOTYPE_DIR, data['name']), 'w+') as p:
+        p.write(data['prototype'])
 
 
 def prototype_listing(request):
     context = {}
-    form = PrototypeForm(initial={'prototype': default_prototype})
+    form = PrototypeForm(initial={'prototype': DEFAULT_PROTOTYPE})
     if request.method == 'POST':
         form = PrototypeForm(request.POST)
         if form.is_valid():
-            form_data = form.cleaned_data
-            form_data['name'] = form_data['name'] + '.html'
-            form.save(form_data)
-
+            try:
+                form_data = form.cleaned_data
+                form_data['name'] = form_data['name'] + '.html'
+                form.save(form_data)
+            except Exception, ex:
+                form.errors['error'] = ' ' + ex.message
     context = {
         'prototypes': os.listdir(settings.PROTOTYPE_DIR),
         'form': form
     }
-    print context
     return render(request, 'prototype-listing.html', context)
 
 
