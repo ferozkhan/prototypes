@@ -1,15 +1,49 @@
 {% load url from future %}
     <!DOCTYPE html>
-<html lang="en" class="no-js"> <head>
-<meta charset="utf-8">
-<title>Prototypes list</title> </head>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <title>Prototypes list</title>
+    <style type="text/css">
+    form{
+        font-size:0.9em;
+    }
+    </style>
+</head>
 <body>
-<h1>Rapid Prototypes</h1>
-<h2>This is a list of all of the available prototypes.</h2>
-<ul>
-{% for prototype in prototypes %}
-<li><a href="{% url 'prototype_details' prototype %}">{{ prototype }}</a></li>
-{% endfor %}
-            </ul>
-    </body>
+    <h1>Rapid Prototypes</h1>
+    <div style="float:left;margin:20px;" class="column1">
+    <h3>Available prototypes.</h3>
+    <ul>
+    {% for prototype in prototypes %}
+    <li><a href="{% url 'prototype_details' prototype %}">{{ prototype }}</a></li>
+    {% endfor %}
+                </ul>
+    </div>
+    <div style="float:left;margin:20px;" class="column2">
+    <h3>New Prototype<h3>
+    <div style="color:red;font-size:0.8em;">
+        {{form.errors}}
+    </div>
+    <form action="{% url "prototypes_listing" %}" method="POST">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td colspan=2 style="text-align:right;"><input type="submit" value="save"></td>
+            </tr>
+            <tr>
+                <td>name:</td>
+                <td>{{form.name}}.html</td>
+            </tr>
+            <tr>
+                <td style="vertical-align: top">prototype:</td>
+                <td>{{form.prototype}}</td>
+            </tr>
+            <tr>
+                <td colspan=2 style="text-align:right;"><input type="submit" value="save"></td>
+            </tr>
+        </table>
+    </form>
+    </div>
+</body>
 </html>
