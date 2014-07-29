@@ -32,6 +32,5 @@ def deploy():
     sudo('pip install -r %(path)s/requirements.txt' % env)
     sudo('cp %(path)s/conf/nginx/prototype /etc/nginx/sites-enabled/' % env)
     sudo('rm -f /etc/nginx/sites-enabled/default')
-    sudo('uwsgi --enable-thread --ini /var/www/prototype/conf/uwsgi/prototype.ini')
-    sudo('uwsgi.reload()')
+    sudo('uwsgi --enable-thread --touch-reload --ini /var/www/prototype/conf/uwsgi/prototype.ini')
     sudo('/etc/init.d/nginx restart')
