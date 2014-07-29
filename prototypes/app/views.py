@@ -47,12 +47,15 @@ def prototype_listing(request):
     context = {}
     form = PrototypeForm(initial={'prototype': DEFAULT_PROTOTYPE})
     if request.method == 'POST':
-        form = PrototypeForm(request.POST)
-        if form.is_valid():
-            form_data = form.cleaned_data
-            if len(form_data['prototype']) > MAX_PROTOTYPE_LIMIT:
-                raise forms.ValidationError('prototype size must be less than 5MB')
-            form.save(form_data)
+        try:
+            form = PrototypeForm(request.POST)
+            if form.is_valid():
+                form_data = form.cleaned_data
+                if len(form_data['prototype']) > MAX_PROTOTYPE_LIMIT:
+                    raise forms.ValidationError('prototype size must be less than 5MB')
+                form.save(form_data)
+        except Exception, ex:
+            form.errors['error'] = ':  ' + ex.message
 
     context = {
         'prototypes': os.listdir(settings.PROTOTYPE_DIR),
