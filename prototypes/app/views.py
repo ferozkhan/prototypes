@@ -27,7 +27,8 @@ class PrototypeForm(forms.Form):
     }), required=True)
 
     def save(self, data):
-        create_prototype(data)
+        with open(os.path.join(settings.PROTOTYPE_DIR, data['name']), 'w+') as p:
+            p.write(data['prototype'])
 
 
 def remove_prototype(request):
@@ -36,11 +37,6 @@ def remove_prototype(request):
         if os.path.exists(prototype_path):
             os.remove(prototype_path)
     return HttpResponseRedirect('/prototypes/')
-
-
-def create_prototype(data):
-    with open(os.path.join(settings.PROTOTYPE_DIR, data['name']), 'w+') as p:
-        p.write(data['prototype'])
 
 
 def prototype_listing(request):
