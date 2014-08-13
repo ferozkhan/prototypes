@@ -27,15 +27,18 @@ class PrototypeForm(forms.Form):
     }), required=True)
 
     def save(self, data):
-        with open(os.path.join(settings.PROTOTYPE_DIR, data['name']), 'w+') as p:
+        prototypes_dir = getattr(settings, 'PROTOTYPE_DIR', None)
+        if not os.path.exists(prototypes_dir):
+            os.mkdir(prototypes_dir)
+        with open(os.path.join(prototypes_dir, data['name']), 'w+') as p:
             p.write(data['prototype'])
 
 
 def remove_prototype(request):
-    if request.REQUEST.get('prototype'):
-        prototype_path = os.path.join(settings.PROTOTYPE_DIR, request.REQUEST.get('prototype'))
-        if os.path.exists(prototype_path):
-            os.remove(prototype_path)
+    proto_name = request.REQUEST.get('prototype', None)
+    if proto_name:
+        if os.path.exists(getattr(settings, 'PROTOTYPE_DIR', None), proto_name):
+            os.remove(os.path.join(settings.PROTOTYPE_DIR), proto_name)
     return HttpResponseRedirect('/prototypes/')
 
 
