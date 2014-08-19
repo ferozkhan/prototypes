@@ -3,7 +3,8 @@ import os
 from django import forms
 from django.conf import settings
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
+from django.template import TemplateDoesNotExist
 
 
 MAX_PROTOTYPE_LIMIT = 5242880
@@ -37,8 +38,8 @@ class PrototypeForm(forms.Form):
 def remove_prototype(request):
     proto_name = request.REQUEST.get('prototype', None)
     if proto_name:
-        if os.path.exists(getattr(settings, 'PROTOTYPE_DIR', None), proto_name):
-            os.remove(os.path.join(settings.PROTOTYPE_DIR), proto_name)
+        if os.path.exists(os.path.join(getattr(settings, 'PROTOTYPE_DIR', None), proto_name)):
+            os.remove(os.path.join(settings.PROTOTYPE_DIR, proto_name))
     return HttpResponseRedirect('/prototypes/')
 
 
@@ -64,5 +65,8 @@ def prototype_listing(request):
 
 
 def prototype_details(request, slug):
-    prototype = 'prototypes/{0}'.format(slug)
-    return render(request, prototype)
+    try:
+        prototype = 'prototypes/{0}'.format(slug)
+        return render(request, prototype)
+    except TemplateDoesNotExist:
+        raise Http404
